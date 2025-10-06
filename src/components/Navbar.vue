@@ -2,38 +2,50 @@
 </script>
 
 <template>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Navbar</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Pricing</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Dropdown link
-            </a>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
-            </ul>
-        </li>
-        </ul>
+    <div class="d-flex">
+        <nav class="sidebar bg-body-tertiary p-3">
+            <h1 class="navbar-brand aurora fs-1 fw-bold mb-4" href="#">Aurora</h1>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class=" bi bi-house nav-link active fs-4 fw-bold " aria-current="page" href="#">  Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class=" bi bi-people nav-link fs-4 fw-bold" href="#">  Clientes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class=" bi bi-graph-up nav-link fs-4 fw-bold" href="#">  Ventas</a> 
+                    </li>
+                    <li class="nav-item dropdown">
+                    <a class=" bi bi-box nav-link dropdown-toggle fs-4 fw-bold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Inventario </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item fs-5 fw-bold" href="#">Producto</a></li>
+                            <li><a class="dropdown-item fs-5 fw-bold" href="#">Marca</a></li>
+                            <li><a class="dropdown-item fs-5 fw-bold" href="#">Categoria</a></li>
+                            <li><a class="dropdown-item fs-5 fw-bold" href="#">Lote</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
     </div>
-    </div>
-</nav>
 </template>
 
 <style scoped>
+.aurora {
+    font-size: 150%;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+}
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    overflow-y: auto;
+}
+main {
+    margin-left: 250px;
+}
 </style>

@@ -13,10 +13,6 @@ const form = reactive ({
 
 const formRef = ref<HTMLFormElement | null>(null)
 
-const errors = reactive ({
-    username: "",
-    password: ""
-});
 
 function validate(){
     return formRef.value?.checkValidity()
@@ -44,15 +40,9 @@ function send () {
             <input v-model="form.username" type="text" class="form-control" minlength="4" maxlength="20" required id="floatingInput" placeholder="name@example.com">
             <label for="floatingInput">Usuario</label>
         </div>
-        <div v-if="errors.username" class="text-danger small mb-3">
-            {{ errors.username }}
-        </div>
         <div class="form-floating mb-4">
             <input v-model="form.password" type="password" class="form-control" minlength="8" maxlength="12" required id="floatingPassword" placeholder="Password">
             <label for="floatingPassword">Contraseña</label>
-        </div>
-        <div v-if="errors.password" class="text-danger small mb-3">
-            {{ errors.password }}
         </div>
         <div class="form-text mb-4 fw-bold text-center" >Ingresa tus credenciales para iniciar sesión en <span class="aurora fw-bold">Aurora</span></div>
         <div class="d-flex justify-content-center mt-4">
