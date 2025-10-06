@@ -2,14 +2,19 @@
 </script>
 
 <template>
-    
-    <h1 class="title mb-5 text-center fs-1 text-primary fw-bold my-5">Inicio</h1>
-    <h2 class=" mb-4 fw-bold text-center col-4">Bienvenido a Aurora,  software de administracion de inventario para ferreterias</h2>
-
+    <div class=" row d-flex justify-content-end px-5"> ">
+        
+        <h1 class="colorinicio px-5 display-2 fw-bold mt-5 mb-5 col-10 ">Inicio</h1>
+        
+        <h1 class="px-5 display-4 fw-bold mb-1 col-10">
+            Bienvenido a Aurora, software de administracion de inventario para ferreterias
+        </h1>
+        
+    </div>
 </template>
 
 <style scoped>
-.title {
-    font-size: 100px;
+.colorinicio {
+    color: #2575fc
 }
 </style>

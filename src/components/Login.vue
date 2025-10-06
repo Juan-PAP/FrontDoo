@@ -44,7 +44,7 @@ function send () {
             <input v-model="form.password" type="password" class="form-control" minlength="8" maxlength="12" required id="floatingPassword" placeholder="Password">
             <label for="floatingPassword">Contraseña</label>
         </div>
-        <div class="form-text mb-4 fw-bold text-center" >Ingresa tus credenciales para iniciar sesión en <span class="aurora fw-bold">Aurora</span></div>
+        <div   >Ingresa tus credenciales para iniciar sesión en <span class="aurora fw-bold">Aurora</span></div>
         <div class="d-flex justify-content-center mt-4">
             <button type="submit" class="btn btn-primary mb-3 ">Iniciar sesion</button>
         </div>
@@ -56,16 +56,4 @@ function send () {
 </template>
 
 <style scoped>
-.title {
-    font-size: 300%;
-    text-shadow: 5px 5px 10px rgba(0,0,0,0.5);
-}
-
-.aurora {
-    font-size: 150%;
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
-}
 </style>
