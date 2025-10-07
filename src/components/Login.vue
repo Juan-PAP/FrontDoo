@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { show } from '../modules/state';
+import router from '../router';
 
 interface Login {
     username: string;
@@ -22,8 +23,13 @@ function send () {
     if (!validate()){
         return console.log("error")
     }
-    show.value = true;
+    if (form.username == "Jkila" && form.password == "Kijuampa"){
+        router.push('/home')
+        show.value = true;
 
+    } else{
+        show.value = false;
+    }
     console.log("Formulario valido: ", form.password, form.username)
 }
 
@@ -56,4 +62,16 @@ function send () {
 </template>
 
 <style scoped>
+.title {
+    font-size: 300%;
+    text-shadow: 5px 5px 10px rgba(0,0,0,0.5);
+}
+
+.aurora {
+    font-size: 150%;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+}
 </style>
