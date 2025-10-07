@@ -3,7 +3,8 @@ import type { RouteRecordRaw } from 'vue-router'
 import Home from '../components/Home.vue'
 import Login from '../components/Login.vue' 
 import Customer from '../components/Customer.vue'
-import CustomerLogin from '../components/CustomerLogin.vue'
+import CustomerLogin from '../components/CustomerRegister.vue'
+import CustomerRegister from '../components/CustomerRegister.vue'
 
 const routes: RouteRecordRaw[] = [
 {
@@ -22,9 +23,9 @@ name: 'customer',
 component: Customer
 },
 {
-path: '/customer/login',
-name: 'customer-login',
-component: CustomerLogin
+path: '/customer/register',
+name: 'customer-register',
+component: CustomerRegister
 }
 ]
 
