@@ -4,12 +4,17 @@
 <template>
 
     <div class=" row d-flex justify-content-end px-5 " >
-        <h1 class="colorcliente px-5 display-2 fw-bold mt-5 mb-5 col-10 ">Cliente</h1>
+        <h1 class="color-cliente px-5 display-2 fw-bold mt-5 mb-5 col-10 ">Cliente</h1>
     </div>
-     <div class=" row d-flex justify-content-end px-5 " >
-        <router-link to="/customer/register"  class=" btn btn-primary display-2 fw-bold mt-3 mb-3 col-2 ">Registrar nuevo cliente</router-link>
-    <div class=" row d-flex justify-content-end px-5 " >
-        <button type="button" class="btn btn-info px-5 display-2 fw-bold mt-3 mb-3 col-3">Filtrar</button>
+        
+    <div class=" row d-flex justify-content-end " >
+
+        <div class="d-flex justify-content-end">
+            <router-link to="/customer/register"  class=" btn btn-primary display-2 fw-bold mt-3 mb-3 col-2 ">Registrar nuevo cliente</router-link>
+        </div>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-primary display-2 fw-bold mt-3 mb-3 col-2 ">Filtrar</button>
+        </div>
 
         <div class="table-responsive px-5 mt-5 col-10 ">
             <table class="table mt-5">
@@ -59,14 +64,13 @@
                 
             </tbody>
             </table>
-        </div>
-    </div>      
+        </div>   
         
     </div>
 </template>
 
 <style scoped>
-.colorcliente {
+.color-cliente {
     color: #2575fc
 }
 </style>

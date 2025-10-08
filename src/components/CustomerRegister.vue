@@ -77,7 +77,7 @@ function send () {
         </div>
 
         <div class="d-flex justify-content-between mb-3">
-            <router-link to="/customer"  class="btn btn-danger mb-3">Cancelar</router-link>
+            <router-link to="/customer"  class="btn btn-danger mb-3 col-3 ">Cancelar</router-link>
             <button type="submit" class="btn btn-primary mb-3 ">Registrar</button>
         </div>
         <transition name="slide-fade">
