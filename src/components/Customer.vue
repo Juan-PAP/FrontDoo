@@ -7,7 +7,7 @@
         <h1 class="colorcliente px-5 display-2 fw-bold mt-5 mb-5 col-10 ">Cliente</h1>
     </div>
      <div class=" row d-flex justify-content-end px-5 " >
-        <button type="button" class="btn btn-primary  display-2 fw-bold mt-3 mb-3 col-2 ">Registrar nuevo cliente</button>
+        <router-link to="/customer/register"  class=" btn btn-primary display-2 fw-bold mt-3 mb-3 col-2 ">Registrar nuevo cliente</router-link>
     <div class=" row d-flex justify-content-end px-5 " >
         <button type="button" class="btn btn-info px-5 display-2 fw-bold mt-3 mb-3 col-3">Filtrar</button>
 

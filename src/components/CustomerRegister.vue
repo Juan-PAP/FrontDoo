@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
-import { show } from '../modules/state';
-import router from '../router';
 
 const today = ref(new Date().toISOString().split('T')[0])
 
-interface Login {
+interface Record {//registro
     identificationNumber: string;
     fullname: string;
     phoneNumber: string;
@@ -20,18 +18,20 @@ const form = reactive ({
 });
 
 const formRef = ref<HTMLFormElement | null>(null)
+const successMessage = ref(""); // Nuevo
 
 function validate(){
     return formRef.value?.checkValidity()
 }
 
 function send () {
+    successMessage.value = ""; //nuevo
     if (!validate()){
         return console.log("error")
     }
-    router.push('/customer')
-    show.value = true;
 
+    successMessage.value = "El cliente se registró correctamente.";
+    setTimeout(() => (successMessage.value = ""), 3000);
 
     console.log("Formulario valido: ", form.identificationNumber, form.fullname, form.phoneNumber, form.birthDate)
 }
@@ -73,20 +73,30 @@ function send () {
         </div>
 
         <div class="d-flex justify-content-between mb-3">
-            <button type="button" class="btn btn-danger mb-3">Cancelar</button>
+            <router-link to="/customer"  class="btn btn-danger mb-3">Cancelar</router-link>
             <button type="submit" class="btn btn-primary mb-3 ">Registrar</button>
         </div>
-
-        
-    </form>
-
+        <transition name="slide-fade">
+            <div v-if="successMessage" class="alert-success-custom mt-3 text-center p-3 fw-semibold rounded">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                {{ successMessage }}
+            </div>
+        </transition>
+        </form>
     </div>
-    
 </template>
 
 <style scoped>
 .title {
-    font-size: 300%;
-    text-shadow: 5px 5px 10px rgba(0,0,0,0.5);
+  font-size: 2.3rem;
+  font-weight: 600;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* 💚 Estilo moderno y colorido para el mensaje */
+.alert-success-custom {
+  background: linear-gradient(90deg, #20c997);
+  color: #fff;
+  letter-spacing: 0.3px;
 }
 </style>
