@@ -31,6 +31,10 @@ function send () {
     }
 
     successMessage.value = "El cliente se registró correctamente.";
+    form.identificationNumber = "";
+    form.fullname = "";
+    form.phoneNumber = "";
+    form.birthDate = "";
     setTimeout(() => (successMessage.value = ""), 3000);
 
     console.log("Formulario valido: ", form.identificationNumber, form.fullname, form.phoneNumber, form.birthDate)
