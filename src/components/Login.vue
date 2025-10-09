@@ -4,36 +4,43 @@ import { show } from '../modules/state';
 import router from '../router';
 
 interface Login {
+
     username: string;
     password: string;
+
 }
 const form = reactive ({
+
     username: "",
     password: ""
+
 });
 
 const formRef = ref<HTMLFormElement | null>(null)
-const errorMessage = ref(""); // Nuevo
 
+const errorMessage = ref("");
 
 function validate(){
     return formRef.value?.checkValidity()
 }
 
 function send () {
-      errorMessage.value = ""; //nuevo
+    errorMessage.value = "";
+
     if (!validate()){
         return console.log("error")
     }
-    if (form.username == "Jkila" && form.password == "Kijuampa"){
-        router.push('/home')
-        show.value = true;
 
-    } else{
+    if (form.username == "Jkila" && form.password == "Kijuampa"){
+        localStorage.setItem('token', ' token');
+        router.push({ name: 'home' })
+        show.value = true;
+    } else {
         show.value = false;
-        errorMessage.value = "Usuario o contraseña incorrectos."; // nuevo
-        setTimeout(() => (errorMessage.value = ""), 3000); //nuevo
+        errorMessage.value = "Usuario o contraseña incorrectos.";
+        setTimeout(() => (errorMessage.value = ""), 3000);
     }
+
     console.log("Formulario valido: ", form.password, form.username)
 }
 
@@ -57,7 +64,7 @@ function send () {
 
         <div class=" mb-5 text-center" >Ingresa tus credenciales para iniciar sesión en <span class="aurora fw-bold" placeholder="">Aurora</span></div>
         <div class="d-flex justify-content-center mt-4 col-12">
-             <button type="submit" class="btn btn-primary mb-3 ">Iniciar sesion</button>
+            <button type="submit" class="btn btn-primary mb-3 ">Iniciar sesion</button>
         </div>
         
         <div v-if="errorMessage" class="alert alert-danger text-center" role="alert"><!--nuevo-->

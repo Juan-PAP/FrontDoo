@@ -11,7 +11,3 @@ export const show = ref(savedShow);
 watch(show, (newValue) => {
   localStorage.setItem("showNavbar", newValue.toString());
 });
-
-/*import { ref } from "vue";
-
-export const show = ref(false);*/

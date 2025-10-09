@@ -3,12 +3,13 @@ import { reactive, ref } from 'vue';
 
 const today = ref(new Date().toISOString().split('T')[0])
 
-interface Record {//registro
+interface Record {
     identificationNumber: string;
     fullname: string;
     phoneNumber: string;
     birthDate: Date;
 }
+
 const form = reactive ({
     identificationNumber: "",
     fullname: "",
@@ -18,14 +19,14 @@ const form = reactive ({
 });
 
 const formRef = ref<HTMLFormElement | null>(null)
-const successMessage = ref(""); // Nuevo
+const successMessage = ref("");
 
 function validate(){
     return formRef.value?.checkValidity()
 }
 
 function send () {
-    successMessage.value = ""; //nuevo
+    successMessage.value = "";
     if (!validate()){
         return console.log("error")
     }
@@ -57,17 +58,17 @@ function send () {
         </select>
 
         <div class="form-floating mb-4">
-            <input v-model="form.identificationNumber" type="text" class="form-control" minlength="6" pattern="\d{6,25}" maxlength="25" required id="floatinIdentification" placeholder="Solo valores numericos">
+            <input v-model.trim="form.identificationNumber" type="text" class="form-control" minlength="6" pattern="\d{6,25}" maxlength="25" required id="floatinIdentification" placeholder="Solo valores numericos">
             <label for="floatingPassword">Numero de identificacion</label>
         </div>
 
         <div class="form-floating mb-4">
-            <input v-model="form.fullname" type="text" class="form-control" minlength="3" maxlength="100" required id="floatingFullNumber" placeholder="">
+            <input v-model.trim="form.fullname" type="text" class="form-control" minlength="3" maxlength="100" required id="floatingFullNumber" placeholder="">
             <label for="floatingInput">Nombre completo</label>
         </div>
 
         <div class="form-floating mb-4">
-            <input v-model="form.phoneNumber" type="text" class="form-control" minlength="8" pattern="\d{8,20}" maxlength="20" required id="floatingphoneNumber" placeholder="">
+            <input v-model.trim="form.phoneNumber" type="text" class="form-control" minlength="8" pattern="\d{8,20}" maxlength="20" required id="floatingphoneNumber" placeholder="">
             <label for="floatingPassword">Numero de telefono</label>
         </div>
 
@@ -77,9 +78,10 @@ function send () {
         </div>
 
         <div class="d-flex justify-content-between mb-3">
-            <router-link to="/customer"  class="btn btn-danger mb-3 col-3 ">Cancelar</router-link>
-            <button type="submit" class="btn btn-primary mb-3 ">Registrar</button>
+            <router-link to="/customer" class="btn btn-danger">Cancelar</router-link>
+            <button type="submit" class="btn btn-primary">Registrar</button>
         </div>
+        
         <transition name="slide-fade">
             <div v-if="successMessage" class="alert-success-custom mt-3 text-center p-3 fw-semibold rounded">
                 <i class="bi bi-check-circle-fill me-2"></i>
@@ -92,15 +94,15 @@ function send () {
 
 <style scoped>
 .title {
-  font-size: 2.3rem;
-  font-weight: 600;
-  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
-}
+    font-size: 2.3rem;
+    font-weight: 600;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+    }
 
-/* 💚 Estilo moderno y colorido para el mensaje */
+
 .alert-success-custom {
-  background: linear-gradient(90deg, #20c997);
-  color: #fff;
-  letter-spacing: 0.3px;
+    background: linear-gradient(90deg, #20c997);
+    color: #fff;
+    letter-spacing: 0.3px;
 }
 </style>

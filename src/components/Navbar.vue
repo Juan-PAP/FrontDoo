@@ -2,10 +2,10 @@
 import { show } from '../modules/state';
 import router from '../router';
 
-function logout() { //nuevo: de donde sale? de taste.ts necesitamos algo que vuelva a cambiar el estado del show para que no vuelva a aparecer cuando se va a iniciar secion nuevamente
-  show.value = false;
-  localStorage.removeItem("showNavbar"); 
-  router.push('/Login');           // Redirige al login
+function logout() {
+    localStorage.removeItem('token'); // 🔹 Coincide con el guard y el login
+    show.value = false;
+    setTimeout(() => router.push('/login'), 50); // Redirige correctamente
 }
 </script>
 
@@ -32,7 +32,7 @@ function logout() { //nuevo: de donde sale? de taste.ts necesitamos algo que vue
                             <li><a class="dropdown-item fs-5 fw-bold " href="#">Lote</a></li>
                         </ul>
                         <div class="d-flex align-items-end mt-4 col-12">
-                            <button class="btn btn-primary mb-5" @click="logout">Cerrar sesión</button>
+                            <button class="btn btn-primary position-fixed bottom-0 start-0 mb-4 ms-4" @click="logout">Cerrar sesión</button>
                         </div>
                     </li>
                 </ul>
@@ -60,18 +60,18 @@ main {
     margin-left: 250px;
 }
 .nav-link {
-  color: #333;
-  transition: all 0.3s ease;
+    color: #333;
+    transition: all 0.3s ease;
 }
 
 .nav-link:hover {
-  color: #2575fc;
+    color: #2575fc;
 }
 
 .router-link-exact-active {
-  color: white !important;
-  background-color: #2575fc !important;
-  border-radius: 8px;
-  padding: 8px 12px;
+    color: white !important;
+    background-color: #2575fc !important;
+    border-radius: 8px;
+    padding: 8px 12px;
 }
 </style>

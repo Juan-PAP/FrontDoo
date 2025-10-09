@@ -2,7 +2,7 @@
 </script>
 
 <template>
-    <div class=" row d-flex justify-content-end px-5"> ">
+    <div class=" row d-flex justify-content-end px-5">
         
         <h1 class="colorinicio px-5 display-2 fw-bold mt-5 mb-5 col-10 ">Inicio</h1>
         
