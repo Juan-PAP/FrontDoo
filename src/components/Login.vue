@@ -34,9 +34,9 @@ function send () {
     if (form.username == "Jkila" && form.password == "Kijuampa"){
         localStorage.setItem('token', ' token');
         router.push({ name: 'home' })
+        console.log(show.value);
         show.value = true;
     } else {
-        show.value = false;
         errorMessage.value = "Usuario o contraseña incorrectos.";
         setTimeout(() => (errorMessage.value = ""), 3000);
     }

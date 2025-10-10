@@ -3,8 +3,8 @@ import { show } from '../modules/state';
 import router from '../router';
 
 function logout() {
-    localStorage.removeItem('token'); // 🔹 Coincide con el guard y el login
-    show.value = false;
+    localStorage.removeItem('token');
+    show.value = false; // 🔹 Coincide con el guard y el login
     setTimeout(() => router.push('/login'), 50); // Redirige correctamente
 }
 </script>
