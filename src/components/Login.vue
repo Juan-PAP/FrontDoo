@@ -54,7 +54,7 @@ function send () {
             <h1 class="title mb-5 text-center">Inicio de sesión</h1>
         </div>
         <div class="form-floating mb-4">
-            <input v-model="form.username" type="text" class="form-control" minlength="4" maxlength="20"  required id="floatingUsername" placeholder="">
+            <input v-model.trim="form.username" type="text" class="form-control" minlength="4" maxlength="20"  required id="floatingUsername" placeholder="">
             <label for="floatingInput">Usuario</label>
         </div>
         <div class="form-floating mb-4">
