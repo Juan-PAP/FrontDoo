@@ -2,14 +2,9 @@
 import { reactive, ref } from 'vue';
 import { show } from '../modules/state';
 import router from '../router';
+import type { LoginInterface } from './interfaces/Login';
 
-interface Login {
-
-    username: string;
-    password: string;
-
-}
-const form = reactive ({
+const form:LoginInterface = reactive ({
 
     username: "",
     password: ""
