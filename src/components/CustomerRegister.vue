@@ -5,6 +5,7 @@ import type { CustomerInterface } from './interfaces/Customer';
 const today = ref(new Date().toLocaleDateString('en-CA', { timeZone: 'America/Bogota' }))
 
 const form: CustomerInterface = reactive({
+    identificationType: "",
     identificationNumber: "",
     fullname: "",
     phoneNumber:"",
@@ -14,6 +15,14 @@ const form: CustomerInterface = reactive({
 
 const formRef = ref<HTMLFormElement | null>(null)
 const successMessage = ref("");
+
+const identificationType = [
+    { value: "TI", text: "Tarjeta de identidad" },
+    { value: "CC", text: "Cédula de ciudadanía" },
+    { value: "CE", text: "Cedula de extranjeria" },
+    // Puede añadir o quitar elementos aquí fácilmente
+
+];
 
 function validateField(input: HTMLInputElement) {
     const feedback = input.parentElement?.querySelector('.invalid-feedback') as HTMLElement;
@@ -74,6 +83,7 @@ function send () {
 
     successMessage.value = "El cliente se registró correctamente.";
     Object.assign(form, {
+        identificationType: "",
         identificationNumber: "",
         fullname: "",
         phoneNumber: "",
@@ -83,7 +93,11 @@ function send () {
 
     setTimeout(() => (successMessage.value = ""), 3000);
 
-    console.log("Formulario valido: ", form.identificationNumber, form.fullname, form.phoneNumber, form.birthDate)
+    console.log("Formulario valido: ", form.identificationNumber, form.fullname, form.phoneNumber, form.birthDate, form.identificationType)
+
+    // La lista de tipos de identificación como un objeto
+
+
 }
 
 </script>
@@ -95,15 +109,23 @@ function send () {
                 <h1 class="title mb-5 text-center">Registrar cliente</h1>
             </div>
 
-            <div class="mb-4">
-                <select class="form-select" aria-label="Tipo de identificación" required>
+            <div class="mb-4"> 
+                <select 
+                    class="form-select" 
+                    aria-label="Tipo de identificación" 
+                    required 
+                    v-model="form.identificationType" 
+                    @change="validateField($event.target as HTMLInputElement)" >
+
                     <option value="" disabled selected>Tipo de identificación</option>
-                    <option value="1">Tarjeta de identidad</option>
-                    <option value="2">Cedula de ciudadania</option>
-                    <option value="3">Cedula de extranjeria</option>
+                    
+                    <option v-for="type in identificationType" :key="type.value" :value="type.value">
+                        {{ type.text }}
+                    </option>
                 </select>
                 <div class="invalid-feedback">Selecciona un tipo de identificación.</div>
             </div>
+            
 
             <div class="form-floating mb-4">
                 <input v-model.trim="form.identificationNumber" type="text" class="form-control" minlength="6" maxlength="25" pattern="\d{6,25}"  required id="floatinIdentification" placeholder="Solo valores numericos" @input="validateField($event.target as HTMLInputElement)">
