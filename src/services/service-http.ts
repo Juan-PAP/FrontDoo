@@ -1,5 +1,6 @@
+// src/services/service.ts
 
-type HttpResponse<Response> = {
+export type HttpResponse<Response> = { // <-- ¡AQUÍ ESTÁ EL ARREGLO!
   success?: Response
   error?: string
 }
@@ -29,7 +30,7 @@ export async function getRequest<Response>(
 // POST
 export async function postRequest<Response>(
   endpoint: string,
-  body: Record<string, unknown>
+body: Record<string, any>
 ): Promise<HttpResponse<Response>> {
   try {
     const response = await fetch(`${BASE_URL}${endpoint}`, {
@@ -39,10 +40,14 @@ export async function postRequest<Response>(
     })
 
     if (![200, 201, 204].includes(response.status)) {
+      // Intenta leer el error del backend si existe
+      const errorData = await response.json().catch(() => null);
+      if (errorData && errorData.error) {
+           return { error: errorData.error }
+      }
       return { error: `Error: ${response.status} - ${response.statusText}` }
     }
 
-    // algunos POST devuelven body vacío (204)
     const data = response.status !== 204 ? await response.json() : null
     return { success: data as Response }
   } catch (error) {
