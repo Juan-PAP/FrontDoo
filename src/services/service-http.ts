@@ -1,6 +1,4 @@
-// src/services/service.ts
-
-export type HttpResponse<Response> = { // <-- ¡AQUÍ ESTÁ EL ARREGLO!
+export type HttpResponse<Response> = { 
   success?: Response
   error?: string
 }

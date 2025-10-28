@@ -3,7 +3,7 @@ import { reactive, ref } from 'vue';
 import { show } from '../modules/state';
 import router from '../router';
 import type { LoginInterface } from './interfaces/Login';
-import { login } from '../services/service-login'; // 🔹 NUEVO: Importamos el servicio
+import { login } from '../services/service-login'; 
 
 const form:LoginInterface = reactive ({
 
@@ -15,13 +15,12 @@ const form:LoginInterface = reactive ({
 const formRef = ref<HTMLFormElement | null>(null)
 
 const errorMessage = ref("");
-const isLoading = ref(false); // 🔹 NUEVO: Para feedback al usuario
+const isLoading = ref(false);
 
 function validate(){
     return formRef.value?.checkValidity()
 }
 
-// 🔸 MODIFICADO: La función 'send' ahora es 'async'
 async function send () {
     errorMessage.value = "";
 
@@ -29,19 +28,16 @@ async function send () {
         return console.log("error")
     }
 
-    isLoading.value = true; // 🔹 Mostramos que está cargando
+    isLoading.value = true; 
 
-    // 🔸 MODIFICADO: Usamos el servicio de login
     const response = await login(form);
 
-    isLoading.value = false; // 🔹 Dejamos de cargar
+    isLoading.value = false;
 
     if (response.success) {
-        // El servicio ya guardó el token
         router.push({ name: 'home' });
         show.value = true;
     } else {
-        // Mostramos el error que vino del servicio (quemado o real)
         errorMessage.value = response.error || "Error desconocido.";
         setTimeout(() => (errorMessage.value = ""), 3000);
     }

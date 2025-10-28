@@ -48,7 +48,7 @@ export async function getCustomers(): Promise<HttpResponse<Cliente[]>> {
     
     // 🔸 OPCIÓN 2: Lógica REAL
     // Cuando estés listo, comenta la línea de arriba y descomenta esta:
-    return await getRequest<Cliente[]>("/customers"); // Asumiendo que tu endpoint es /customers
+    return await getRequest<Cliente[]>("/customers"); // Asumiendo que tu endpoint es /customer
     
 }
 
