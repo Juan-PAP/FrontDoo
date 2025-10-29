@@ -1,63 +1,77 @@
 <script setup lang="ts">
-import { reactive, ref, watch } from 'vue';
+import { reactive, ref, watch, onMounted } from 'vue';
 import type { CustomerInterface } from './interfaces/Customer';
-import { registerCustomer } from '../services/service-customer'; // 🔹 NUEVO
-import router from '../router'; // 🔹 NUEVO (para redirigir)
+import { registerCustomer } from '../services/service-customer';
+import router from '../router';
+import { getIdTypes } from '../services/service-id-type'; 
+import type { IdType } from '../services/service-id-type';
 
 const today = ref(new Date().toLocaleDateString('en-CA', { timeZone: 'America/Bogota' }))
 
 const form: CustomerInterface = reactive({
-    identificationType: "",
+    identificationType: {
+        id: ""
+    },
     identificationNumber: "",
-    fullname: "",
+    fullName: "",
     phoneNumber:"",
     birthDate:""
 });
 
 const formRef = ref<HTMLFormElement | null>(null)
 const successMessage = ref("");
-const errorMessage = ref(""); // 🔹 NUEVO: Para errores del "backend"
-const isLoading = ref(false); // 🔹 NUEVO: Estado de carga
+const errorMessage = ref("");
+const isLoading = ref(false);
 
-const identificationTypeOptions = [
-    { value: "TI", text: "Tarjeta de identidad" },
-    { value: "CC", text: "Cédula de ciudadanía" },
-    { value: "CE", text: "Cédula de extranjería" },
-];
+const identificationTypeOptions = ref<IdType[]>([]);
 
-// ... (Todas tus funciones de validación: validateAgeAndDocument, watch, validateField, validateForm ... van aquí. No necesitan cambios)
+onMounted(async () => {
+    const response = await getIdTypes();
+    if (response.success) {
+        identificationTypeOptions.value = (response.success as any).data;
+    } else {
+        errorMessage.value = "Error al cargar los tipos de documento. Intente de nuevo.";
+    }
+});
+
 function validateAgeAndDocument(): string | null {
-    const docType = form.identificationType as 'CC' | 'TI' | 'CE';
+    const selectedId = form.identificationType.id;
     const birthDateStr = form.birthDate;
 
-    if (!birthDateStr || (docType !== 'CC' && docType !== 'TI')) {
+    if (!birthDateStr || !selectedId) {
+        return null;
+    }
+
+    const selectedType = identificationTypeOptions.value.find(t => t.id === selectedId);
+    
+    const docName = selectedType ? selectedType.name : "";
+
+
+    if (docName !== "Cedula de Ciudadania" && docName !== "Tarjeta de Identidad") {
         return null;
     }
 
     const fechaNacimiento = new Date(birthDateStr);
     const hoy = new Date();
-    
     const fechaMayoriaEdad = new Date(fechaNacimiento);
     fechaMayoriaEdad.setFullYear(fechaNacimiento.getFullYear() + 18);
-
     const esMayorDeEdad = hoy >= fechaMayoriaEdad;
 
     if (esMayorDeEdad) {
-        if (docType === 'TI') {
-            return 'Para mayores de 18 años, el tipo de documento debe ser Cédula de Ciudadanía (CC).';
+        if (docName === 'Tarjeta de Identidad') {
+            return 'Para mayores de 18 años, el tipo de documento debe ser Cédula de Ciudadanía.';
         }
     } else {
-        if (docType === 'CC') {
-            return 'Para menores de 18 años, el tipo de documento debe ser Tarjeta de Identidad (TI).';
+        if (docName === 'Cedula de Ciudadania') {
+            return 'Para menores de 18 años, el tipo de documento debe ser Tarjeta de Identidad.';
         }
     }
-    
+
     return null; 
 }
 
-watch([() => form.identificationType, () => form.birthDate], () => {
-
-    if ((form.identificationType && form.birthDate)) {
+watch([() => form.identificationType.id, () => form.birthDate], () => {
+    if ((form.identificationType.id && form.birthDate)) {
         const docInput = formRef.value?.querySelector('#floatingIdentificationType') as HTMLSelectElement;
         const dateInput = formRef.value?.querySelector('#floatingBirthdate') as HTMLInputElement;
         if (docInput) validateField(docInput);
@@ -140,42 +154,39 @@ function validateForm() {
     return isFormValid;
 }
 
-// 🔸 MODIFICADO: La función 'send' ahora es 'async'
 async function send () {
     successMessage.value = "";
-    errorMessage.value = ""; // 🔹 Limpiamos error previo
+    errorMessage.value = "";
     formRef.value?.classList.add("was-validated")
 
     if (!validateForm()){
         return console.log("error: Formulario inválido");
     }
 
-    isLoading.value = true; // 🔹 Empezamos a cargar
+    isLoading.value = true;
 
-    // 🔸 MODIFICADO: Llamamos al servicio de registro
-    const response = await registerCustomer(form);
+    const response = await registerCustomer(form); 
     
-    isLoading.value = false; // 🔹 Terminamos de cargar
+    isLoading.value = false;
 
     if (response.success) {
         successMessage.value = "El cliente se registró correctamente.";
+
         Object.assign(form, {
-            identificationType: "",
+            identificationType: { id: "" },
             identificationNumber: "",
-            fullname: "",
+            fullName: "",
             phoneNumber: "",
             birthDate: ""
         });
         formRef.value?.classList.remove("was-validated");
 
-        // Redirigimos a la lista de clientes después de 2 segundos
         setTimeout(() => {
             successMessage.value = "";
             router.push('/customer');
         }, 2000);
 
     } else {
-        // Mostramos el error simulado del backend
         errorMessage.value = response.error || "Ocurrió un error al registrar el cliente.";
         setTimeout(() => (errorMessage.value = ""), 4000);
     }
@@ -198,15 +209,13 @@ async function send () {
                     class="form-select" 
                     aria-label="Tipo de identificación" 
                     required 
-                    v-model="form.identificationType" 
-                    id="floatingIdentificationType"
+                    v-model="form.identificationType.id" id="floatingIdentificationType"
                     @change="validateField($event.target as HTMLSelectElement)"
                     :disabled="isLoading" 
-                >
+                    >
                     <option value="" disabled selected>Tipo de identificación</option>
-                    <option v-for="type in identificationTypeOptions" :key="type.value" :value="type.value">
-                        {{ type.text }}
-                    </option>
+                    <option v-for="type in identificationTypeOptions" :key="type.id" :value="type.id">
+                        {{ type.name }} </option>
                 </select>
                 <div class="invalid-feedback">Selecciona un tipo de identificación.</div>
             </div>
@@ -218,7 +227,7 @@ async function send () {
             </div>
 
             <div class="form-floating mb-4">
-                <input v-model.trim="form.fullname" type="text" class="form-control" minlength="3" maxlength="100" required id="floatingFullName" placeholder="" @input="validateField($event.target as HTMLInputElement)" :disabled="isLoading">
+                <input v-model.trim="form.fullName" type="text" class="form-control" minlength="3" maxlength="100" required id="floatingFullName" placeholder="" @input="validateField($event.target as HTMLInputElement)" :disabled="isLoading">
                 <label for="floatingFullName">Nombre completo</label>
                 <div class="invalid-feedback">Debe tener entre 3 y 100 caracteres.</div>
             </div>

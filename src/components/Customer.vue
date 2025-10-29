@@ -1,13 +1,28 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { getCustomers } from '../services/service-customer'; // 🔹 NUEVO
-import type { Cliente } from './interfaces/Customer'; // 🔹 NUEVO (interfaz centralizada)
+import { getCustomers } from '../services/service-customer';
+import type { Customer } from './interfaces/Customer';
 
-const clientes = ref<Cliente[]>([])
-const isLoading = ref(true); // 🔹 NUEVO: Estado de carga
-const errorMessage = ref<string | null>(null); // 🔹 NUEVO: Estado de error
+const customers = ref<Customer[]>([])
+const isLoading = ref(true);
+const errorMessage = ref<string | null>(null);
 
-// 🔸 MODIFICADO: onMounted ahora es async y llama al servicio
+function calculateAge(birthDateString: string): number | string {
+    if (!birthDateString) return "N/A";
+    try {
+        const birthDate = new Date(birthDateString);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+    }
+        return age;
+    } catch (e) {
+        return "N/A";
+    }
+}
+
 onMounted(async () => {
     isLoading.value = true;
     errorMessage.value = null;
@@ -15,7 +30,7 @@ onMounted(async () => {
     const response = await getCustomers();
 
     if (response.success) {
-        clientes.value = response.success;
+        customers.value = (response.success as any).data;
     } else {
         errorMessage.value = response.error || "No se pudieron cargar los clientes.";
     }
@@ -50,8 +65,8 @@ onMounted(async () => {
         <div v-else-if="errorMessage" class="alert alert-danger mx-auto mt-5 col-10">
             {{ errorMessage }}
         </div>
-        
-        <div v-else-if="clientes.length === 0" class="alert alert-info mx-auto mt-5 col-10">
+
+        <div v-else-if="customers.length === 0" class="alert alert-info mx-auto mt-5 col-10">
             No hay clientes registrados por el momento.
         </div>
 
@@ -68,13 +83,13 @@ onMounted(async () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="cliente in clientes" :key="cliente.id">
-                        <td>{{ cliente.tipoIdentificacion }}</td>
-                        <td>{{ cliente.numeroIdentificacion }}</td>
-                        <td>{{ cliente.nombreCompleto }}</td>
-                        <td>{{ cliente.telefono }}</td>
-                        <td>{{ cliente.fechaNacimiento }}</td>
-                        <td>{{ cliente.edad }}</td>
+                    <tr v-for="customer in customers" :key="customer.id">
+                        <td>{{ customer.identificationType.name }}</td> 
+                        <td>{{ customer.identificationNumber }}</td>
+                        <td>{{ customer.fullName }}</td>
+                        <td>{{ customer.phoneNumber }}</td>
+                        <td>{{ customer.birthDate }}</td>
+                        <td>{{ calculateAge(customer.birthDate) }}</td>
                     </tr>
                 </tbody>
             </table>

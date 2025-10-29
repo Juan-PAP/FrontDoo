@@ -38,11 +38,12 @@ body: Record<string, any>
     })
 
     if (![200, 201, 204].includes(response.status)) {
-      // Intenta leer el error del backend si existe
       const errorData = await response.json().catch(() => null);
-      if (errorData && errorData.error) {
-           return { error: errorData.error }
+
+      if (errorData && errorData.messages && errorData.messages.length > 0) {
+          return { error: errorData.messages[0] } // Devolvemos el primer mensaje
       }
+      
       return { error: `Error: ${response.status} - ${response.statusText}` }
     }
 

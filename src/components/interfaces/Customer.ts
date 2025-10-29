@@ -1,21 +1,21 @@
-// src/components/interfaces/Customer.ts
-
-// 🔹 Interfaz para el formulario de REGISTRO
 export interface CustomerInterface {
-    identificationType: string;
+    identificationType: {
+        id: string;
+    };
     identificationNumber: string;
-    fullname: string;
+    fullName: string;
     phoneNumber: string;
     birthDate: string;
 }
 
-// 🔹 Interfaz para la LISTA de clientes (la movimos desde Customer.vue)
-export interface Cliente {
-    id: number
-    tipoIdentificacion: string
-    numeroIdentificacion: string
-    nombreCompleto: string
-    telefono: string
-    fechaNacimiento: string
-    edad: number
+export interface Customer {
+    id: string;
+    identificationType: {
+        id: string;
+        name: string;
+    };
+    identificationNumber: string;
+    fullName: string;
+    phoneNumber: string;
+    birthDate: string;
 }

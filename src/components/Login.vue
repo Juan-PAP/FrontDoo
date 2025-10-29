@@ -7,7 +7,7 @@ import { login } from '../services/service-login';
 
 const form:LoginInterface = reactive ({
 
-    username: "",
+    user: "",
     password: ""
 
 });
@@ -55,7 +55,7 @@ async function send () {
                 <h1 class="title mb-5 text-center">Inicio de sesión</h1>
             </div>
             <div class="form-floating mb-4">
-                <input v-model.trim="form.username" type="text" class="form-control" minlength="4" maxlength="20"  required id="floatingUsername" placeholder="" :disabled="isLoading"> <label for="floatingInput">Usuario</label>
+                <input v-model.trim="form.user" type="text" class="form-control" minlength="4" maxlength="20"  required id="floatingUsername" placeholder="" :disabled="isLoading"> <label for="floatingInput">Usuario</label>
             </div>
             <div class="form-floating mb-4">
                 <input v-model="form.password" type="password" class="form-control" minlength="8" maxlength="12" required id="floatingPassword" placeholder="" :disabled="isLoading"> <label for="floatingPassword">Contraseña</label>
