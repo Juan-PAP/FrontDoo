@@ -6,5 +6,5 @@ export interface IdType {
 }
 
 export async function getIdTypes(): Promise<HttpResponse<IdType[]>> {
-    return await getRequest<IdType[]>("/api/v1/idtypes");
+    return await getRequest<IdType[]>("/api/v1/id-types");
 }
