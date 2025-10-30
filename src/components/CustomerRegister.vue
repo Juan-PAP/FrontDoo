@@ -90,21 +90,27 @@ function validateField(input: HTMLInputElement | HTMLSelectElement) {
         if (input.validity.valueMissing) {
             message = "Este campo es obligatorio.";
 
-        } else if (input.validity.patternMismatch) {
-            if (input.id === "floatingIdentification") {
-                message = "El número de identificación solo debe contener dígitos (6 a 25 caracteres).";
-
-            } else if (input.id === "floatingPhoneNumber") {
-                message = "El número de teléfono solo debe contener dígitos (8 a 20 caracteres).";
-            }
+        
         } else if (input.validity.tooShort) {
             message = `Debe tener al menos ${input.minLength} caracteres.`;
 
         } else if (input.validity.tooLong) {
             message = `Debe tener máximo ${input.maxLength} caracteres.`;
             
+        } else if (input.validity.patternMismatch) {
+            if (input.id === "floatingIdentification") {
+                message = "El número de identificación solo debe contener dígitos (6 a 25 caracteres).";
+
+            } else if (input.id === "floatingPhoneNumber") {
+                message = "El número de teléfono solo debe contener dígitos (8 a 15 caracteres).";
+                
+            } else if (input.id === "floatingFullName") {
+                message = "El nombre completo solo debe contener letras y espacios (3 a 100 caracteres).";
+            }
+
         } else if (input.type === "date") {
             const selectedDate = new Date(input.value);
+            
 
             const todayDate = new Date(
                 new Date().toLocaleString("en-US", { timeZone: "America/Bogota" })
@@ -227,13 +233,13 @@ async function send () {
             </div>
 
             <div class="form-floating mb-4">
-                <input v-model.trim="form.fullName" type="text" class="form-control" minlength="3" maxlength="100" required id="floatingFullName" placeholder="" @input="validateField($event.target as HTMLInputElement)" :disabled="isLoading">
+                <input v-model.trim="form.fullName" type="text" class="form-control" minlength="3" maxlength="100" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{3,100}$" required id="floatingFullName" placeholder="" @input="validateField($event.target as HTMLInputElement)" :disabled="isLoading">
                 <label for="floatingFullName">Nombre completo</label>
-                <div class="invalid-feedback">Debe tener entre 3 y 100 caracteres.</div>
+                <div class="invalid-feedback"></div>
             </div>
 
             <div class="form-floating mb-4">
-                <input v-model.trim="form.phoneNumber" type="text" class="form-control" minlength="8" maxlength="20" pattern="\d{8,20}"  required id="floatingPhoneNumber" placeholder="" @input="validateField($event.target as HTMLInputElement)" :disabled="isLoading">
+                <input v-model.trim="form.phoneNumber" type="text" class="form-control" minlength="8" maxlength="15" pattern="\d{8,15}"  required id="floatingPhoneNumber" placeholder="" @input="validateField($event.target as HTMLInputElement)" :disabled="isLoading">
                 <label for="floatingPhoneNumber">Numero de telefono</label>
                 <div class="invalid-feedback"></div>
             </div>
