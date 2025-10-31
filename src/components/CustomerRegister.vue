@@ -34,15 +34,10 @@ onMounted(async () => {
     }
 });
 
-/**
- * Calcula la edad exacta de una persona en años a partir de su fecha de nacimiento.
- */
 function calculateAgeInYears(birthDateStr: string): number {
     const fechaNacimiento = new Date(birthDateStr);
     const hoy = new Date();
-    // Cálculo aproximado usando milisegundos para precisión
     const edadEnMilisegundos = hoy.getTime() - fechaNacimiento.getTime();
-    // Milisegundos en un año promedio (incluyendo años bisiestos)
     const MS_PER_YEAR = 1000 * 60 * 60 * 24 * 365.25; 
     return edadEnMilisegundos / MS_PER_YEAR;
 }
@@ -59,16 +54,14 @@ function validateAgeAndDocument(): string | null {
     
     const docName = selectedType ? selectedType.name : "";
 
+    const edadActual = calculateAgeInYears(birthDateStr);
+
+    if (edadActual <= 7) {
+        return 'La edad mínima para realizar una compra es de 7 años.';
+    }
 
     if (docName !== "Cedula de Ciudadania" && docName !== "Tarjeta de Identidad") {
         return null;
-    }
-
-    // 1. **NUEVA VALIDACIÓN: Edad Mínima (7 años)**
-    const edadActual = calculateAgeInYears(birthDateStr);
-    
-    if (edadActual < 7) {
-        return 'La edad mínima para realizar una compra es de 7 años.';
     }
     
     const fechaNacimiento = new Date(birthDateStr);

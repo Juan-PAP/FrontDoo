@@ -19,7 +19,7 @@ const routes: RouteRecordRaw[] = [
         path: '/home',
         name: 'home',
         component: Home,
-        meta: { requiresAuth: true } //Ento se usa para crear un guardia para proteger las rutas, osea que solo puede ingresar a ellas, unas vez que se inicie sesión, de resto no se puede
+        meta: { requiresAuth: true }
     },
     {
         path: '/customer',
