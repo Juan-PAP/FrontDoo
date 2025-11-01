@@ -34,12 +34,46 @@ onMounted(async () => {
     }
 });
 
-function calculateAgeInYears(birthDateStr: string): number {
-    const fechaNacimiento = new Date(birthDateStr);
-    const hoy = new Date();
-    const edadEnMilisegundos = hoy.getTime() - fechaNacimiento.getTime();
-    const MS_PER_YEAR = 1000 * 60 * 60 * 24 * 365.25; 
-    return edadEnMilisegundos / MS_PER_YEAR;
+function calculateAgeInYears(birthDateStr: string | undefined): number {
+    
+    if (typeof birthDateStr === 'string' && birthDateStr.length >= 10) {
+        
+        const yearStr = birthDateStr.substring(0, 4);
+        const monthStr = birthDateStr.substring(5, 7);
+        const dayStr = birthDateStr.substring(8, 10);
+
+        const year = parseInt(yearStr, 10);
+        const month = parseInt(monthStr, 10) - 1;
+        const day = parseInt(dayStr, 10);
+
+        if (isNaN(year) || isNaN(month) || isNaN(day)) {
+            return 0;
+        }
+
+        const fechaNacimiento = new Date(year, month, day);
+
+        if (fechaNacimiento.getFullYear() !== year || 
+            fechaNacimiento.getMonth() !== month || 
+            fechaNacimiento.getDate() !== day) {
+            return 0; 
+        }
+
+        const hoy = new Date();
+        
+        let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+        
+        const diferenciaMes = hoy.getMonth() - fechaNacimiento.getMonth();
+        const diferenciaDia = hoy.getDate() - fechaNacimiento.getDate();
+        
+        if (diferenciaMes < 0 || (diferenciaMes === 0 && diferenciaDia < 0)) {
+            edad--;
+        }
+        
+        return edad;
+
+    } else {
+        return 0;
+    }
 }
 
 function validateAgeAndDocument(): string | null {
@@ -49,26 +83,21 @@ function validateAgeAndDocument(): string | null {
     if (!birthDateStr || !selectedId) {
         return null;
     }
-
     const selectedType = identificationTypeOptions.value.find(t => t.id === selectedId);
-    
+
     const docName = selectedType ? selectedType.name : "";
 
     const edadActual = calculateAgeInYears(birthDateStr);
 
-    if (edadActual <= 7) {
-        return 'La edad mínima para realizar una compra es de 7 años.';
+    if (edadActual < 7) { 
+        return 'La edad mínima de un cliente es de 7 años.';
     }
 
     if (docName !== "Cedula de Ciudadania" && docName !== "Tarjeta de Identidad") {
         return null;
     }
     
-    const fechaNacimiento = new Date(birthDateStr);
-    const hoy = new Date();
-    const fechaMayoriaEdad = new Date(fechaNacimiento);
-    fechaMayoriaEdad.setFullYear(fechaNacimiento.getFullYear() + 18);
-    const esMayorDeEdad = hoy >= fechaMayoriaEdad;
+    const esMayorDeEdad = edadActual >= 18;
 
     if (esMayorDeEdad) {
         if (docName === 'Tarjeta de Identidad') {
@@ -76,7 +105,7 @@ function validateAgeAndDocument(): string | null {
         }
     } else {
         if (docName === 'Cedula de Ciudadania') {
-            return 'Para menores de 18 años, el tipo de documento debe ser Tarjeta de Identidad.';
+        return 'Para menores de 18 años, el tipo de documento debe ser Tarjeta de Identidad.';
         }
     }
 
