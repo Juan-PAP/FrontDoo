@@ -18,19 +18,30 @@ const errorMessage = ref("");
 const isLoading = ref(false);
 
 function validate(){
-    return formRef.value?.checkValidity()
+    return formRef.value?.reportValidity()
 }
 
 async function send () {
     errorMessage.value = "";
 
     if (!validate()){
-        return console.log("error")
+        return console.log("Error de validación HTML5 (ej. campo vacío)")
+    }
+
+    if (form.user.trim().length < 4) {
+        errorMessage.value = "El usuario debe tener al menos 4 caracteres sin espacios.";
+        setTimeout(() => (errorMessage.value = ""), 3000);
+        return; // Detenemos el envío
     }
 
     isLoading.value = true; 
 
-    const response = await login(form);
+    const payload = {
+        user: form.user.trim(),
+        password: form.password
+    };
+
+    const response = await login(payload); 
 
     isLoading.value = false;
 
@@ -38,14 +49,10 @@ async function send () {
         router.push({ name: 'home' });
         show.value = true;
     } else {
-        errorMessage.value = response.error || "Error desconocido.";
+    errorMessage.value = response.error || "Error desconocido.";
         setTimeout(() => (errorMessage.value = ""), 3000);
     }
-
-    
 }
-
-
 </script>
 
 <template>
@@ -55,7 +62,7 @@ async function send () {
                 <h1 class="title mb-5 text-center">Inicio de sesión</h1>
             </div>
             <div class="form-floating mb-4">
-                <input v-model.trim="form.user" type="text" class="form-control" minlength="4" maxlength="20"  required id="floatingUsername" placeholder="" :disabled="isLoading"> <label for="floatingInput">Usuario</label>
+                <input v-model.trim="form.user" type="text" class="form-control" minlength="4" maxlength="20"  required id="floatingUsername" placeholder="" :disabled="isLoading"> <label for="floatingUsername">Usuario</label>
             </div>
             <div class="form-floating mb-4">
                 <input v-model="form.password" type="password" class="form-control" minlength="8" maxlength="12" required id="floatingPassword" placeholder="" :disabled="isLoading"> <label for="floatingPassword">Contraseña</label>
@@ -64,7 +71,7 @@ async function send () {
             <div class=" mb-5 text-center" >Ingresa tus credenciales para iniciar sesión en <span class="aurora fw-bold" placeholder="">Aurora</span></div>
             
             <div class="d-flex justify-content-center mt-4 col-12">
-                 <button type="submit" class="btn btn-primary mb-3" :disabled="isLoading">
+                <button type="submit" class="btn btn-primary mb-3" :disabled="isLoading">
                     <span v-if="isLoading" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
                     <span role="status">{{ isLoading ? 'Iniciando...' : 'Iniciar sesion' }}</span>
                 </button>
