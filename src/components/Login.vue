@@ -31,7 +31,7 @@ async function send () {
     if (form.user.trim().length < 4) {
         errorMessage.value = "El usuario debe tener al menos 4 caracteres sin espacios.";
         setTimeout(() => (errorMessage.value = ""), 3000);
-        return; // Detenemos el envío
+        return; 
     }
 
     isLoading.value = true; 
@@ -86,7 +86,6 @@ async function send () {
 </template>
 
 <style scoped>
-/* Tus estilos (sin cambios) */
 .title {
     font-size: 300%;
     text-shadow: 5px 5px 10px rgba(0,0,0,0.5);
