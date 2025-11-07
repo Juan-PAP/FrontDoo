@@ -15,13 +15,23 @@ export async function getRequest<Response>(
     })
 
     if (response.status !== 200) {
-      return { error: `Error: ${response.status} - ${response.statusText}` }
+      const errorData = await response.json().catch(() => null);
+
+      if (errorData && errorData.messages && errorData.messages.length > 0) {
+        return { error: errorData.messages[0] }
     }
+
+    return { error: `Error: ${response.status} - ${response.statusText}` }
+  }
+
 
     const data = (await response.json()) as Response
     return { success: data }
+
   } catch (error) {
-    return { error: `Error: ${String(error)}` }
+
+    console.error("Error de Red (Fetch):", error);
+    return { error: "Error de Red: No se pudo conectar con el servidor." }
   }
 }
 
@@ -41,7 +51,7 @@ body: Record<string, any>
       const errorData = await response.json().catch(() => null);
 
       if (errorData && errorData.messages && errorData.messages.length > 0) {
-          return { error: errorData.messages[0] } // Devolvemos el primer mensaje
+          return { error: errorData.messages[0] }
       }
       
       return { error: `Error: ${response.status} - ${response.statusText}` }
@@ -49,7 +59,10 @@ body: Record<string, any>
 
     const data = response.status !== 204 ? await response.json() : null
     return { success: data as Response }
+
   } catch (error) {
-    return { error: `Error: ${String(error)}` }
+    console.error("Error de Red (Fetch):", error);
+
+    return { error: "Error de Red: No se pudo conectar con el servidor." }
   }
 }

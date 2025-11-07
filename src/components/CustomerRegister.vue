@@ -90,7 +90,7 @@ function validateAgeAndDocument(): string | null {
     const edadActual = calculateAgeInYears(birthDateStr);
 
     if (edadActual < 7) { 
-        return 'La edad mínima de un cliente es de 7 años.';
+        return 'La edad mínima de un cliente debe ser de 7 años.';
     }
 
     if (docName !== "Cedula de Ciudadania" && docName !== "Tarjeta de Identidad") {
@@ -141,10 +141,10 @@ function validateField(input: HTMLInputElement | HTMLSelectElement) {
             
         } else if (input.validity.patternMismatch) {
             if (input.id === "floatingIdentification") {
-                message = "El número de identificación solo debe contener dígitos (6 a 25 caracteres).";
+                message = "El número de identificación solo debe contener solo números (6 a 25 caracteres).";
 
             } else if (input.id === "floatingPhoneNumber") {
-                message = "El número de teléfono solo debe contener dígitos (8 a 15 caracteres).";
+                message = "El número de teléfono solo debe contener solo números (8 a 15 caracteres).";
                 
             } else if (input.id === "floatingFullName") {
                 message = "El nombre completo solo debe contener letras y espacios (3 a 100 caracteres).";
