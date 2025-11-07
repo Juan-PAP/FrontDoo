@@ -42,7 +42,7 @@ const router = createRouter({
         return savedPosition ?? { top: 0 }
     }
 })
-// Guard
+
 router.beforeEach((
     to: RouteLocationNormalized,
     _from: RouteLocationNormalized,
