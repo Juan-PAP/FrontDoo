@@ -31,7 +31,7 @@ export async function getRequest<Response>(
   } catch (error) {
 
     console.error("Error de Red (Fetch):", error);
-    return { error: "Error de Red: No se pudo conectar con el servidor." }
+    return { error: "Error de Red: No se pudo establecer conexión con el servidor. Por favor, inténtelo de nuevo más tarde." }
   }
 }
 
@@ -63,6 +63,6 @@ body: Record<string, any>
   } catch (error) {
     console.error("Error de Red (Fetch):", error);
 
-    return { error: "Error de Red: No se pudo conectar con el servidor." }
+    return { error: "Error de Red: No se pudo establecer conexión con el servidor. Por favor, inténtelo de nuevo más tarde." }
   }
 }

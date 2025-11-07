@@ -25,12 +25,24 @@ const isLoading = ref(false);
 
 const identificationTypeOptions = ref<IdType[]>([]);
 
+const isLoadError = ref(false); 
+
+
 onMounted(async () => {
+
+    isLoading.value = true;
+
     const response = await getIdTypes();
     if (response.success) {
         identificationTypeOptions.value = (response.success as any).data;
     } else {
-        errorMessage.value = "Error al cargar los tipos de documento. Intente de nuevo.";
+        errorMessage.value = "Error al cargar los tipos de documento. Por favor, compruebe la conexión con el servidor.";
+
+        isLoadError.value = true;
+    }
+
+    if (!isLoadError.value) {
+        isLoading.value = false;
     }
 });
 
@@ -204,7 +216,12 @@ function validateForm() {
 
 async function send () {
     successMessage.value = "";
-    errorMessage.value = "";
+
+    if (!isLoadError.value) {
+        errorMessage.value = "";
+    }
+    // -------------------------
+
     formRef.value?.classList.add("was-validated")
 
     if (!validateForm()){
@@ -236,7 +253,14 @@ async function send () {
 
     } else {
         errorMessage.value = response.error || "Ocurrió un error al registrar el cliente.";
-        setTimeout(() => (errorMessage.value = ""), 4000);
+        isLoadError.value = false; 
+
+        setTimeout(() => {
+            if (!isLoadError.value) {
+                errorMessage.value = "";
+            }
+        }, 4000);
+        // -------------------------
     }
 }
 </script>
@@ -250,68 +274,76 @@ async function send () {
 
             <div v-if="errorMessage" class="alert alert-danger text-center" role="alert">
                 {{ errorMessage }}
-            </div> 
-
-            <div class="mb-4"> 
-                <select 
-                    class="form-select" 
-                    aria-label="Tipo de identificación" 
-                    required 
-                    v-model="form.identificationType.id" id="floatingIdentificationType"
-                    @change="validateField($event.target as HTMLSelectElement)"
-                    :disabled="isLoading" 
-                    >
-                    <option value="" disabled selected>Tipo de identificación</option>
-                    <option v-for="type in identificationTypeOptions" :key="type.id" :value="type.id">
-                        {{ type.name }} </option>
-                </select>
-                <div class="invalid-feedback">Selecciona un tipo de identificación.</div>
-            </div>
-            
-            <div class="form-floating mb-4">
-                <input v-model.trim="form.identificationNumber" type="text" class="form-control" minlength="6" maxlength="25" pattern="\d{6,25}"  required id="floatingIdentification" placeholder="" @input="validateField($event.target as HTMLInputElement)" :disabled="isLoading">
-                <label for="floatingIdentification">Número de identificación</label>
-                <div class="invalid-feedback"></div>
             </div>
 
-            <div class="form-floating mb-4">
-                <input v-model.trim="form.fullName" type="text" class="form-control" minlength="3" maxlength="100" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{3,100}$" required id="floatingFullName" placeholder="" @input="validateField($event.target as HTMLInputElement)" :disabled="isLoading">
-                <label for="floatingFullName">Nombre completo</label>
-                <div class="invalid-feedback"></div>
+            <div v-if="isLoadError" class="text-center mt-3">
+                <p>El formulario no puede usarse porque los datos iniciales no cargaron.</p>
+                <p>Por favor compruebe la conexión con el servidor</p>
+                <router-link to="/customer" class="btn btn-secondary">Volver a Clientes</router-link>
             </div>
 
-            <div class="form-floating mb-4">
-                <input v-model.trim="form.phoneNumber" type="text" class="form-control" minlength="8" maxlength="15" pattern="\d{8,15}"  required id="floatingPhoneNumber" placeholder="" @input="validateField($event.target as HTMLInputElement)" :disabled="isLoading">
-                <label for="floatingPhoneNumber">Numero de telefono</label>
-                <div class="invalid-feedback"></div>
-            </div>
-
-            <div class="form-floating mb-4">
-                <input v-model="form.birthDate" type="date" class="form-control" required id="floatingBirthdate" min="1900-01-01" :max="today" @input="validateField($event.target as HTMLInputElement)" :disabled="isLoading">
-                <label for="floatingBirthdate">Fecha de nacimiento</label>
-                <div class="invalid-feedback">Selecciona una fecha válida.</div>
-            </div>
-
-
-            <div class="d-flex justify-content-between mb-3">
-                <router-link to="/customer" class="btn btn-danger" :class="{ disabled: isLoading }">Cancelar</router-link> <button type="submit" class="btn btn-primary" :disabled="isLoading">
-                    <span v-if="isLoading" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                    <span role="status">{{ isLoading ? 'Registrando...' : 'Registrar' }}</span>
-                </button>
-            </div>
-            
-            <transition name="slide-fade">
-                <div v-if="successMessage" class="alert-success-custom mt-3 text-center p-3 fw-semibold rounded">
-                    <i class="bi bi-check-circle-fill me-2"></i>
-                    {{ successMessage }}
+            <div v-else>
+                <div class="mb-4"> 
+                    <select 
+                        class="form-select" 
+                        aria-label="Tipo de identificación" 
+                        required 
+                        v-model="form.identificationType.id" id="floatingIdentificationType"
+                        @change="validateField($event.target as HTMLSelectElement)"
+                        :disabled="isLoading" 
+                        >
+                        <option value="" disabled selected>Tipo de identificación</option>
+                        <option v-for="type in identificationTypeOptions" :key="type.id" :value="type.id">
+                            {{ type.name }} </option>
+                    </select>
+                    <div class="invalid-feedback">Selecciona un tipo de identificación.</div>
                 </div>
-            </transition>
+                
+                <div class="form-floating mb-4">
+                    <input v-model.trim="form.identificationNumber" type="text" class="form-control" minlength="6" maxlength="25" pattern="\d{6,25}"  required id="floatingIdentification" placeholder="" @input="validateField($event.target as HTMLInputElement)" :disabled="isLoading">
+                    <label for="floatingIdentification">Número de identificación</label>
+                    <div class="invalid-feedback"></div>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <input v-model.trim="form.fullName" type="text" class="form-control" minlength="3" maxlength="100" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{3,100}$" required id="floatingFullName" placeholder="" @input="validateField($event.target as HTMLInputElement)" :disabled="isLoading">
+                    <label for="floatingFullName">Nombre completo</label>
+                    <div class="invalid-feedback"></div>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <input v-model.trim="form.phoneNumber" type="text" class="form-control" minlength="8" maxlength="15" pattern="\d{8,15}"  required id="floatingPhoneNumber" placeholder="" @input="validateField($event.target as HTMLInputElement)" :disabled="isLoading">
+                    <label for="floatingPhoneNumber">Número de telefono</label>
+                    <div class="invalid-feedback"></div>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <input v-model="form.birthDate" type="date" class="form-control" required id="floatingBirthdate" min="1900-01-01" :max="today" @input="validateField($event.target as HTMLInputElement)" :disabled="isLoading">
+                    <label for="floatingBirthdate">Fecha de nacimiento</label>
+                    <div class="invalid-feedback">Selecciona una fecha válida.</div>
+                </div>
+
+
+                <div class="d-flex justify-content-between mb-3">
+                    <router-link to="/customer" class="btn btn-danger" :class="{ disabled: isLoading }">Cancelar</router-link> <button type="submit" class="btn btn-primary" :disabled="isLoading">
+                        <span v-if="isLoading" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                        <span role="status">{{ isLoading ? 'Registrando...' : 'Registrar' }}</span>
+                    </button>
+                </div>
+                
+                <transition name="slide-fade">
+                    <div v-if="successMessage" class="alert-success-custom mt-3 text-center p-3 fw-semibold rounded">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        {{ successMessage }}
+                    </div>
+                </transition>
+            </div>
         </form>
     </div>
 </template>
 
 <style scoped>
-/* Tus estilos (sin cambios) */
+
 .title {
     font-size: 2.3rem;
     font-weight: 600;

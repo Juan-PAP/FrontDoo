@@ -5,7 +5,7 @@ export async function login(credentials: LoginInterface): Promise<HttpResponse<L
 
     const response = await postRequest<LoginResponse>("/api/v1/administrators/login", credentials);
 
-    if (response.success && (response.success as any).responseSucceded) {
+    if (response.success) {
 
         localStorage.setItem('token', 'true');
     }

@@ -4,8 +4,8 @@ import router from '../router';
 
 function logout() {
     localStorage.removeItem('token');
-    show.value = false; // 🔹 Coincide con el guard y el login
-    setTimeout(() => router.push('/login'), 50); // Redirige correctamente
+    show.value = false;
+    setTimeout(() => router.push('/login'), 50); 
 }
 </script>
 
@@ -24,6 +24,7 @@ function logout() {
                         <a class=" bi bi-graph-up nav-link fs-4 fw-bold" href="#">  Ventas</a> 
                     </li>
                     <li class="nav-item dropdown">
+                        
                     <a class=" bi bi-box nav-link dropdown-toggle fs-4 fw-bold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Inventario </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item fs-5 fw-bold" href="#">Producto</a></li>
@@ -31,11 +32,12 @@ function logout() {
                             <li><a class="dropdown-item fs-5 fw-bold" href="#">Categoria</a></li>
                             <li><a class="dropdown-item fs-5 fw-bold " href="#">Lote</a></li>
                         </ul>
-                        <div class="d-flex align-items-end mt-4 col-12">
-                            <button class="btn btn-primary position-fixed bottom-0 start-0 mb-4 ms-4" @click="logout">Cerrar sesión</button>
-                        </div>
                     </li>
                 </ul>
+
+                <div class="d-flex align-items-end mt-4 col-12">
+                    <button class="btn btn-primary position-fixed bottom-0 start-0 mb-4 ms-4" @click="logout">Cerrar sesión</button>
+                </div>
             </nav>
     </div>
 </template>

@@ -6,34 +6,51 @@ import type { LoginInterface } from './interfaces/Login';
 import { login } from '../services/service-login'; 
 
 const form:LoginInterface = reactive ({
-
     user: "",
     password: ""
+});
 
+const errors = reactive({
+    user: "",
+    password: ""
 });
 
 const formRef = ref<HTMLFormElement | null>(null)
-
 const errorMessage = ref("");
 const isLoading = ref(false);
 
-function validate(){
-    return formRef.value?.reportValidity()
+function validate(): boolean {
+
+    errors.user = "";
+    errors.password = "";
+    
+    let isValid = true;
+
+    if (!form.user) {
+        errors.user = "El campo usuario es requerido.";
+        isValid = false;
+    } else if (form.user.length < 4) {
+        errors.user = "El usuario debe tener al menos 4 caracteres.";
+        isValid = false;
+    }
+
+    if (!form.password) {
+        errors.password = "El campo contraseña es requerido.";
+        isValid = false;
+    } else if (form.password.length < 8) {
+        errors.password = "La contraseña debe tener al menos 8 caracteres.";
+        isValid = false;
+    }
+
+    return isValid;
 }
 
 async function send () {
     errorMessage.value = "";
 
     if (!validate()){
-        return console.log("Error de validación HTML5 (ej. campo vacío)")
+        return;
     }
-
-    if (form.user.trim().length < 4) {
-        errorMessage.value = "El usuario debe tener al menos 4 caracteres sin espacios.";
-        setTimeout(() => (errorMessage.value = ""), 3000);
-        return; 
-    }
-
     isLoading.value = true; 
 
     const payload = {
@@ -42,14 +59,18 @@ async function send () {
     };
 
     const response = await login(payload); 
-
+    
     isLoading.value = false;
 
     if (response.success) {
+
         router.push({ name: 'home' });
+
         show.value = true;
+
     } else {
-    errorMessage.value = response.error || "Error desconocido.";
+    
+        errorMessage.value = response.error || "Error desconocido.";
         setTimeout(() => (errorMessage.value = ""), 3000);
     }
 }
@@ -57,15 +78,21 @@ async function send () {
 
 <template>
     <div class="row d-flex justify-content-center my-5">
-        <form ref="formRef" @submit.prevent="send" class="col-4">
+        <form ref="formRef" @submit.prevent="send" class="col-4" novalidate>
             <div>
                 <h1 class="title mb-5 text-center">Inicio de sesión</h1>
             </div>
             <div class="form-floating mb-4">
-                <input v-model.trim="form.user" type="text" class="form-control" minlength="4" maxlength="20"  required id="floatingUsername" placeholder="" :disabled="isLoading"> <label for="floatingUsername">Usuario</label>
+                <input v-model.trim="form.user" type="text" :class="['form-control', { 'is-invalid': errors.user }]" minlength="4" maxlength="20"  required id="floatingUsername" placeholder="" :disabled="isLoading"> <label for="floatingUsername">Usuario</label>
+                <div v-if="errors.user" class="invalid-feedback">
+                    {{ errors.user }}
+                </div>
             </div>
             <div class="form-floating mb-4">
-                <input v-model="form.password" type="password" class="form-control" minlength="8" maxlength="12" required id="floatingPassword" placeholder="" :disabled="isLoading"> <label for="floatingPassword">Contraseña</label>
+                <input v-model="form.password" type="password" :class="['form-control', { 'is-invalid': errors.password }]" minlength="8" maxlength="12" required id="floatingPassword" placeholder="" :disabled="isLoading"> <label for="floatingPassword">Contraseña</label>
+                <div v-if="errors.password" class="invalid-feedback">
+                    {{ errors.password }}
+                </div>
             </div>
 
             <div class=" mb-5 text-center" >Ingresa tus credenciales para iniciar sesión en <span class="aurora fw-bold" placeholder="">Aurora</span></div>
@@ -96,5 +123,9 @@ async function send () {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+}
+.form-floating .invalid-feedback {
+    display: block;
+    width: 100%;
 }
 </style>
